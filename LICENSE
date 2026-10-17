@@ -1,0 +1,44 @@
+TOKOPAYVIP PROPRIETARY LICENSE
+Copyright (c) 2026 TokoPayVIP. All Rights Reserved.
+
+1. DEFINISI
+   "Perangkat Lunak" adalah seluruh source code, API, dokumentasi, dan
+   aset milik TokoPayVIP (https://tokopayvip.vercel.app).
+   "Pengguna" adalah pihak ketiga yang menggunakan layanan TokoPayVIP.
+
+2. GRANT LISENSI
+   TokoPayVIP memberikan lisensi TERBATAS kepada Pengguna untuk:
+   a. Menggunakan API resmi TokoPayVIP melalui API key miliknya sendiri
+      untuk kebutuhan bisnis/transaksi Pengguna.
+   b. Mengakses dashboard dan dokumentasi resmi.
+   TIDAK diberikan hak atas source code, modifikasi, maupun redeploy.
+
+3. BATASAN WAJIB
+   Pengguna DILARANG:
+   a. Menyalin, memodifikasi, mendistribusikan, atau menjual ulang
+      source code TokoPayVPN dalam bentuk apapun.
+   b. Mendeploy ulang (redeploy/rebrand) kode ini sebagai produk sendiri.
+   c. Menghapus atau mengubah copyright, logo, branding TokoPayVIP.
+   d. Menjual atau membagikan API key miliknya kepada pihak lain.
+   e. Reverse engineering, decompile, atau disassembly.
+
+4. LARANGAN PENGGUNAAN ILEGAL
+   Layanan tidak boleh digunakan untuk: judi, penipuan, pencucian uang,
+   konten ilegal, atau aktivitas yang melanggar hukum Republik Indonesia.
+   Pelanggaran = pemblokiran permanen tanpa refund.
+
+5. PENGAKHUNAN
+   Lisensi berakhir otomatis jika Pengguna melanggar ketentuan di atas.
+   TokoPayVIP berhak memblokir akun, mencabut API key, dan menempuh
+   langkah hukum sesuai peraturan perundang-undangan yang berlaku.
+
+6. GARANSI & TANGGUNG JAWAB
+   Perangkat Lunak disediakan "SEBAGAIMANA ADANYA" tanpa garansi apapun.
+   TokoPayVIP tidak bertanggung jawab atas kerugian tidak langsung yang
+   timbul dari penggunaan layanan.
+
+7. PERUBAHAN
+   TokoPayVIP dapat memperbarui lisensi ini sewaktu-waktu dan akan
+   dipublikasikan di repositori/resmi TokoPayVIP.
+
+Kontak: melalui dashboard resmi TokoPayVIP.
