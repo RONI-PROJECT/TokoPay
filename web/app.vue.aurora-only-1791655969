@@ -1,0 +1,30 @@
+<template>
+  <div class="app-root">
+    <!-- Aurora background global — muncul di semua halaman -->
+    <BackgroundEffect v-if="isEnabled" />
+
+    <!-- Konten utama di atas aurora -->
+    <div class="app-content">
+      <NuxtLayout>
+        <NuxtPage />
+      </NuxtLayout>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+const { isEnabled } = useBackgroundEffect()
+</script>
+
+<style>
+/* Pastikan konten di atas aurora & aurora tetap fixed di belakang */
+.app-root {
+  position: relative;
+  min-height: 100vh;
+}
+
+.app-content {
+  position: relative;
+  z-index: 1;
+}
+</style>
