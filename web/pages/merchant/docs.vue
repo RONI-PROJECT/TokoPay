@@ -663,7 +663,6 @@ function createQrisPayment(string $apiKey, string $baseUrl, array $order): array
         'expires_minutes' => 15,
         'metadata'        => [
             'order_id' => $order['id'],
-            'product'  => $order['product'],
         ],
     ]);
 
@@ -695,7 +694,6 @@ function createQrisPayment(string $apiKey, string $baseUrl, array $order): array
     'id'        => 'TPV-2043',
     'reference' => '${REF}',
     'amount'    => ${AMOUNT},
-    'product'   => 'Sepatu Sneakers Putih',
 ]);
 
 // simpan reference untuk pencocokan webhook
