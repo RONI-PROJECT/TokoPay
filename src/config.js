@@ -24,7 +24,7 @@ export const config = Object.freeze({
    maxAmount: int('MAX_AMOUNT', 1000000000),
    timeZone: str('TZ_NAME', 'Asia/Jakarta'),
    apiKey: str('API_KEY'),
-   apiKeyPrefix: 'ronpay_',
+   apiKeyPrefix: 'tpv_',
    webhook: Object.freeze({
       url: str('WEBHOOK_URL'),
       secret: str('WEBHOOK_SECRET', 'change-me'),

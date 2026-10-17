@@ -9,7 +9,8 @@ const swaggerUiDir = dirname(
 )
 
 const PUBLIC_URL = process.env.PUBLIC_URL || 'https://ronipayment.vercel.app'
-const OG_IMAGE = 'https://cdn.phototourl.com/member/2026-10-10-3d7201e5-5784-486d-9f7d-4ff90cc0bdb4.png'
+const OG_IMAGE = process.env.PUBLIC_OG_IMAGE || 'https://cdn.phototourl.com/member/2026-10-17-2fc2fbd9-ed6f-4fbd-aa69-6b9fcaacbd79.png'
+const FAVICON = process.env.PUBLIC_FAVICON_URL || 'https://cdn.phototourl.com/member/2026-10-17-0b756d8f-9d25-4483-8d78-ff9c4845a55f.png'
 
 export default defineNuxtConfig({
   rootDir: ROOT,
@@ -30,7 +31,7 @@ export default defineNuxtConfig({
 
   app: {
     head: {
-      title: 'UnoPay — Payment Gateway QRIS untuk Merchant Indonesia',
+      title: 'TokoPayVIP — Payment Gateway QRIS untuk Merchant Indonesia',
       htmlAttrs: { lang: 'id' },
       meta: [
         { charset: 'utf-8' },
@@ -38,28 +39,28 @@ export default defineNuxtConfig({
         { name: 'msvalidate.01', content: '19279482692DDF83B7473AD2D989AC15' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
         { name: 'theme-color', content: '#ffffff' },
-        { name: 'description', content: 'UnoPay adalah payment gateway QRIS untuk merchant Indonesia. Terima pembayaran QRIS, kelola transaksi, dan tarik dana dari satu dashboard.' },
+        { name: 'description', content: 'TokoPayVIP adalah payment gateway QRIS untuk merchant Indonesia. Terima pembayaran QRIS, kelola transaksi, dan tarik dana dari satu dashboard.' },
 
         { property: 'og:type', content: 'website' },
-        { property: 'og:site_name', content: 'UnoPay' },
-        { property: 'og:title', content: 'UnoPay — Payment Gateway QRIS untuk Merchant Indonesia' },
+        { property: 'og:site_name', content: 'TokoPayVIP' },
+        { property: 'og:title', content: 'TokoPayVIP — Payment Gateway QRIS untuk Merchant Indonesia' },
         { property: 'og:description', content: 'Payment gateway QRIS untuk merchant Indonesia. Terima pembayaran QRIS, kelola transaksi, dan tarik dana dari satu dashboard.' },
         { property: 'og:image', content: OG_IMAGE },
         { property: 'og:image:secure_url', content: OG_IMAGE },
         { property: 'og:image:width', content: '1200' },
         { property: 'og:image:height', content: '630' },
         { property: 'og:image:type', content: 'image/png' },
-        { property: 'og:image:alt', content: 'UnoPay' },
+        { property: 'og:image:alt', content: 'TokoPayVIP' },
         { property: 'og:url', content: PUBLIC_URL },
 
         { name: 'twitter:card', content: 'summary_large_image' },
-        { name: 'twitter:title', content: 'UnoPay — Payment Gateway QRIS' },
+        { name: 'twitter:title', content: 'TokoPayVIP — Payment Gateway QRIS' },
         { name: 'twitter:description', content: 'Payment gateway QRIS untuk merchant Indonesia.' },
         { name: 'twitter:image', content: OG_IMAGE },
-        { name: 'twitter:image:alt', content: 'UnoPay' },
+        { name: 'twitter:image:alt', content: 'TokoPayVIP' },
       ],
       link: [
-        { rel: 'icon', type: 'image/png', href: OG_IMAGE },
+        { rel: 'icon', type: 'image/png', href: FAVICON },
         { rel: 'apple-touch-icon', sizes: '180x180', href: OG_IMAGE },
       ],
     },
@@ -69,7 +70,7 @@ export default defineNuxtConfig({
     public: {
       apiBaseUrl: process.env.PUBLIC_API_BASE_URL || process.env.PUBLIC_URL || '',
       publicUrl: PUBLIC_URL,
-      brandName: 'UnoPay',
+      brandName: 'TokoPayVIP',
       turnstileSiteKey: process.env.NUXT_PUBLIC_TURNSTILE_SITE_KEY || '',
     },
   },

@@ -67,8 +67,8 @@
           </div>
           <div class="api-item" v-reveal>
             <span class="method post">POST</span>
-            <code>/webhook</code>
-            <p>Notifikasi lunas bertanda tangan.</p>
+            <code>callback_url kamu</code>
+            <p>Callback otomatis saat lunas / kadaluarsa.</p>
           </div>
         </div>
       </div>
@@ -91,8 +91,8 @@
           </article>
           <article class="cell" v-reveal>
             <div class="ic">⚡</div>
-            <h3>Webhook Signed</h3>
-            <p>Notifikasi bertanda tangan, anti-spoof. Server Anda langsung tahu saat lunas.</p>
+            <h3>Callback Otomatis</h3>
+            <p>Notifikasi langsung ke server kamu saat lunas — auto-retry sampai 12x kalau gagal.</p>
           </article>
           <article class="cell" v-reveal>
             <div class="ic">▤</div>
@@ -173,7 +173,7 @@ const snippets = computed<Record<string, string>>(() => ({
   -H "Content-Type: application/json" \\
   -d '{
     "amount": 25000,
-    "reference": "ORDER-10001",
+    "reference": "TPV-10001",
     "callback_url": "https://tokoku.id/pay/notify",
     "expires_minutes": 15
   }'`,
@@ -188,7 +188,7 @@ const snippets = computed<Record<string, string>>(() => ({
     },
     body: JSON.stringify({
       amount: 25000,
-      reference: "ORDER-10001"
+      reference: "TPV-10001"
     })
   }
 );
@@ -210,7 +210,7 @@ curl_setopt_array($ch, [
   ],
   CURLOPT_POSTFIELDS => json_encode([
     "amount" => 25000,
-    "reference" => "ORDER-10001"
+    "reference" => "TPV-10001"
   ])
 ]);
 
@@ -226,7 +226,7 @@ res = requests.post(
   },
   json={
     "amount": 25000,
-    "reference": "ORDER-10001"
+    "reference": "TPV-10001"
   }
 )
 

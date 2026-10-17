@@ -25,7 +25,7 @@ export function sandboxRoutes() {
          );
          if (!key) return res.status(401).json({ success: false, error: 'unauthorized' });
          if (key.environment !== 'sandbox') {
-            return res.status(403).json({ success: false, error: 'Bukan sandbox key — pakai gb_test_*' });
+            return res.status(403).json({ success: false, error: 'Bukan sandbox key — pakai tpv_test_*' });
          }
          if (key.userStatus !== 'active') {
             return res.status(403).json({ success: false, error: 'user suspended' });

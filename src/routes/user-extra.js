@@ -37,7 +37,7 @@ export function userExtraRoutes() {
       try {
          const name = (req.body?.name || 'API Key').slice(0, 100);
          const environment = req.body?.environment === 'sandbox' ? 'sandbox' : 'production';
-         const key = (environment === 'sandbox' ? 'rp_test_' : 'rp_live_') + crypto.randomUUID().replace(/-/g, '');
+         const key = (environment === 'sandbox' ? 'tpv_test_' : 'tpv_live_') + crypto.randomUUID().replace(/-/g, '');
          const secret = crypto.randomUUID();
          const now = new Date().toISOString();
          const row = await one(
@@ -55,7 +55,7 @@ export function userExtraRoutes() {
             [req.params.id, req.user.id]
          );
          if (!existing) return res.status(404).json({ error: 'API key tidak ditemukan' });
-         const key = (existing.environment === 'sandbox' ? 'rp_test_' : 'rp_live_') + crypto.randomUUID().replace(/-/g, '');
+         const key = (existing.environment === 'sandbox' ? 'tpv_test_' : 'tpv_live_') + crypto.randomUUID().replace(/-/g, '');
          const secret = crypto.randomUUID();
          const row = await one(
             'UPDATE api_keys SET key = $1, secret = $2 WHERE id = $3 RETURNING id, name, key, secret, environment, status, "createdAt"',

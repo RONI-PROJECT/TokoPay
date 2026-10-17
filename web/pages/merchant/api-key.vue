@@ -165,7 +165,7 @@ function showToast(message: string, type: 'success' | 'error' = 'success') {
 
 function maskKey(key: string) {
   if (!key) return '—'
-  if (key.startsWith('rp_live_') || key.startsWith('rp_test_')) {
+  if (key.startsWith('tpv_live_') || key.startsWith('tpv_test_') || key.startsWith('rp_live_') || key.startsWith('rp_test_')) {
     const prefix = key.substring(0, 8)
     const rest = key.substring(8)
     if (rest.length <= 8) return key

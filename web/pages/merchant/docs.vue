@@ -1,357 +1,353 @@
 <template>
-  <div class="docs">
-    <div class="hero">
-      <div class="hero-eyebrow">
-        <span class="hero-dot"></span>
-        Dokumentasi
-      </div>
-      <h1>API Reference</h1>
-      <p class="hero-sub">{{ siteName }} Payment Gateway — QRIS dinamis untuk merchant Indonesia.</p>
-      <div class="hero-tags">
-        <span class="hero-tag">REST API</span>
-        <span class="hero-tag">JSON</span>
-        <span class="hero-tag">Signed Webhook</span>
-      </div>
-    </div>
-
-    <div class="info-box">
-      <div class="info-col">
-        <div class="info-label">Base URL</div>
-        <div class="info-value-wrap">
-          <code class="info-value">{{ apiBase }}</code>
-          <button class="info-copy" @click="copyText(apiBase, 'baseurl')" :class="{ copied: copiedKey === 'baseurl' }" aria-label="Copy base URL">
-            <svg v-if="copiedKey !== 'baseurl'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-            </svg>
-            <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <polyline points="20 6 9 17 4 12"/>
-            </svg>
-          </button>
+  <div class="docs-page">
+    <div class="wrap">
+      <div class="hero">
+        <div class="hero-eyebrow">
+          <span class="hero-dot"></span>
+          Dokumentasi Merchant
+        </div>
+        <h1>API Reference</h1>
+        <p class="hero-sub">{{ siteName }} Payment Gateway — QRIS dinamis untuk merchant Indonesia.</p>
+        <div class="hero-tags">
+          <span class="hero-tag">REST API</span>
+          <span class="hero-tag">JSON</span>
+          <span class="hero-tag">Callback Auto-Retry</span>
         </div>
       </div>
-      <div class="info-col">
-        <div class="info-label">Autentikasi</div>
-        <div class="info-value-wrap">
-          <code class="info-value">Authorization: Bearer &lt;API_KEY&gt;</code>
-          <button class="info-copy" @click="copyText('Authorization: Bearer <API_KEY_KAMU>', 'auth')" :class="{ copied: copiedKey === 'auth' }" aria-label="Copy auth header">
-            <svg v-if="copiedKey !== 'auth'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-            </svg>
-            <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <polyline points="20 6 9 17 4 12"/>
-            </svg>
-          </button>
-        </div>
-      </div>
-    </div>
 
-    <div class="card" :class="{ open: openSection === 'endpoints' }">
-      <button class="card-head" @click="toggle('endpoints')">
-        <h2><span class="num">01</span> Daftar Endpoint</h2>
-        <span class="chev">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
-            <polyline points="6 9 12 15 18 9"/>
-          </svg>
-        </span>
-      </button>
-      <div v-show="openSection === 'endpoints'" class="card-body">
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Method</th><th>Endpoint</th><th>Keterangan</th></tr></thead>
-            <tbody>
-              <tr>
-                <td><span class="method post">POST</span></td>
-                <td><code>{{ EP_CREATE }}</code></td>
-                <td>Buat QRIS pembayaran baru</td>
-              </tr>
-              <tr>
-                <td><span class="method get">GET</span></td>
-                <td><code>{{ EP_STATUS.replace(':reference', '{reference}') }}</code></td>
-                <td>Cek status pembayaran</td>
-              </tr>
-              <tr>
-                <td><span class="method get">GET</span></td>
-                <td><code>{{ EP_QR.replace(':reference', '{reference}') }}</code></td>
-                <td>Ambil gambar QR (PNG)</td>
-              </tr>
-              <tr>
-                <td><span class="method post">POST</span></td>
-                <td><code>callback_url kamu</code></td>
-                <td>Webhook payment.paid / payment.expired</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <p>Semua request &amp; response memakai format <code>JSON</code>. Rate limit berlaku per API key.</p>
-      </div>
-    </div>
-
-    <div class="card" :class="{ open: openSection === 'auth' }">
-      <button class="card-head" @click="toggle('auth')">
-        <h2><span class="num">02</span> Autentikasi</h2>
-        <span class="chev">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
-            <polyline points="6 9 12 15 18 9"/>
-          </svg>
-        </span>
-      </button>
-      <div v-show="openSection === 'auth'" class="card-body">
-        <p>Semua endpoint diautentikasi pakai <strong>API key</strong> via header <code>Authorization: Bearer</code>. API key bisa dilihat dan dibuat di halaman <NuxtLink to="/merchant/api-key" class="link">Kredensial</NuxtLink> — bisa banyak key (multi key) dan di-rotate kapan saja.</p>
-        <div class="code-wrap">
-          <div class="code-head">
-            <span class="code-lang">http</span>
-            <button class="btn-copy" @click="copyText('Authorization: Bearer <API_KEY_KAMU>', 'code-auth')" :class="{ copied: copiedKey === 'code-auth' }">
-              <span>{{ copiedKey === 'code-auth' ? 'Copied!' : 'Copy' }}</span>
+      <!-- BASE + AUTH -->
+      <div class="info-box">
+        <div class="info-col">
+          <div class="info-label">Base URL</div>
+          <div class="info-value-wrap">
+            <code class="info-value">{{ apiBase }}</code>
+            <button class="info-copy" @click="copyText(apiBase, 'baseurl')" :class="{ copied: copiedKey === 'baseurl' }" aria-label="Copy base URL">
+              <svg v-if="copiedKey !== 'baseurl'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
             </button>
           </div>
-          <pre>Authorization: Bearer &lt;API_KEY_KAMU&gt;
-Content-Type: application/json</pre>
         </div>
-        <div class="warn-box">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
-            <line x1="12" y1="9" x2="12" y2="13"/>
-            <line x1="12" y1="17" x2="12.01" y2="17"/>
-          </svg>
-          <div>
-            <strong>Jangan pernah expose API key di client-side.</strong> Simpan di environment variable server kamu. Key bocor = dana bisa dibelokkan.
+        <div class="info-col">
+          <div class="info-label">Autentikasi</div>
+          <div class="info-value-wrap">
+            <code class="info-value">Authorization: Bearer tpv_live_xxx</code>
+            <button class="info-copy" @click="copyText('Authorization: Bearer tpv_live_xxx', 'auth')" :class="{ copied: copiedKey === 'auth' }" aria-label="Copy auth header">
+              <svg v-if="copiedKey !== 'auth'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            </button>
           </div>
         </div>
       </div>
-    </div>
 
-    <div class="card" :class="{ open: openSection === 'create' }">
-      <button class="card-head" @click="toggle('create')">
-        <h2><span class="num">03</span> Buat Pembayaran QRIS</h2>
-        <span class="chev">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
-            <polyline points="6 9 12 15 18 9"/>
-          </svg>
-        </span>
-      </button>
-      <div v-show="openSection === 'create'" class="card-body">
-        <p class="ep"><span class="method post">POST</span> <code>{{ EP_CREATE }}</code></p>
-
-        <p>Metode pembayaran yang digunakan adalah <strong>QRIS</strong> (Quick Response Code Indonesian Standard) — satu QR kode yang bisa dibayar dari semua aplikasi mobile banking dan e-wallet yang tergabung dalam standar QRIS (GoPay, OVO, DANA, ShopeePay, BCA, Mandiri, BNI, BRI, dll). QR dibuat dinamis dengan nominal ter-encode, sehingga pembayaran terdeteksi otomatis.</p>
-
-        <div class="sub-label">Body Request</div>
-        <div class="code-wrap">
-          <div class="code-head">
-            <span class="code-lang">json</span>
-            <button class="btn-copy" @click="copyText(bodyCreate, 'code-create-body')" :class="{ copied: copiedKey === 'code-create-body' }">
-              <span>{{ copiedKey === 'code-create-body' ? 'Copied!' : 'Copy' }}</span>
-            </button>
-          </div>
-          <pre>{{ bodyCreate }}</pre>
+      <!-- DAFTAR ENDPOINT -->
+      <div class="card open">
+        <div class="card-head static">
+          <h2><span class="num">01</span> Daftar Endpoint</h2>
         </div>
-
-        <div class="sub-label">Parameter</div>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Field</th><th>Wajib</th><th>Keterangan</th></tr></thead>
-            <tbody>
-              <tr><td><code>amount</code></td><td><span class="req">Ya</span></td><td>Nominal pembayaran (Rp), min. Rp 1.000</td></tr>
-              <tr><td><code>reference</code></td><td>—</td><td>ID order kamu. Auto-generate kalau kosong</td></tr>
-              <tr><td><code>callback_url</code></td><td>—</td><td>Webhook URL khusus transaksi ini</td></tr>
-              <tr><td><code>expires_minutes</code></td><td>—</td><td>Masa berlaku QR (menit). Default 15</td></tr>
-              <tr><td><code>metadata</code></td><td>—</td><td>Object bebas, dibalikin apa adanya di webhook</td></tr>
-            </tbody>
-          </table>
-        </div>
-
-        <div class="sub-label">Contoh cURL</div>
-        <div class="code-wrap">
-          <div class="code-head">
-            <span class="code-lang">bash</span>
-            <button class="btn-copy" @click="copyText(curlCreate, 'code-create-curl')" :class="{ copied: copiedKey === 'code-create-curl' }">
-              <span>{{ copiedKey === 'code-create-curl' ? 'Copied!' : 'Copy' }}</span>
-            </button>
+        <div class="card-body">
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Method</th><th>Endpoint</th><th>Keterangan</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td><span class="method post">POST</span></td>
+                  <td><code>{{ EP_CREATE }}</code></td>
+                  <td>Buat QRIS pembayaran baru</td>
+                </tr>
+                <tr>
+                  <td><span class="method get">GET</span></td>
+                  <td><code>{{ EP_STATUS.replace(':reference', '{reference}') }}</code></td>
+                  <td>Cek status pembayaran</td>
+                </tr>
+                <tr>
+                  <td><span class="method get">GET</span></td>
+                  <td><code>{{ EP_QR.replace(':reference', '{reference}') }}</code></td>
+                  <td>Ambil gambar QR (PNG)</td>
+                </tr>
+                <tr>
+                  <td><span class="method post">POST</span></td>
+                  <td><code>{{ EP_CANCEL.replace(':reference', '{reference}') }}</code></td>
+                  <td>Batalkan transaksi PENDING</td>
+                </tr>
+                <tr>
+                  <td><span class="method post">POST</span></td>
+                  <td><code>{{ EP_REPLAY.replace(':reference', '{reference}') }}</code></td>
+                  <td>Kirim ulang callback manual</td>
+                </tr>
+                <tr>
+                  <td><span class="method post">POST</span></td>
+                  <td><code>callback_url kamu</code></td>
+                  <td>Callback payment.paid / payment.expired</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
-          <pre>{{ curlCreate }}</pre>
-        </div>
-
-        <div class="sub-label">Response</div>
-        <div class="code-wrap">
-          <div class="code-head">
-            <span class="code-lang">json</span>
-            <button class="btn-copy" @click="copyText(responseCreate, 'code-create-res')" :class="{ copied: copiedKey === 'code-create-res' }">
-              <span>{{ copiedKey === 'code-create-res' ? 'Copied!' : 'Copy' }}</span>
-            </button>
-          </div>
-          <pre>{{ responseCreate }}</pre>
-        </div>
-
-        <div class="sub-label">Menampilkan QR ke Customer</div>
-        <p>Response sudah menyertakan <code>qr_image</code> (URL gambar QR siap tampil). Cukup render:</p>
-        <div class="code-wrap">
-          <div class="code-head">
-            <span class="code-lang">html</span>
-            <button class="btn-copy" @click="copyText(codeQrHtml, 'code-qr-html')" :class="{ copied: copiedKey === 'code-qr-html' }">
-              <span>{{ copiedKey === 'code-qr-html' ? 'Copied!' : 'Copy' }}</span>
-            </button>
-          </div>
-          <pre>{{ codeQrHtml }}</pre>
+          <p>Semua request &amp; response memakai format <code>JSON</code>. Rate limit berlaku per API key.</p>
         </div>
       </div>
-    </div>
 
-    <div class="card" :class="{ open: openSection === 'status' }">
-      <button class="card-head" @click="toggle('status')">
-        <h2><span class="num">04</span> Cek Status Pembayaran</h2>
-        <span class="chev">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
-            <polyline points="6 9 12 15 18 9"/>
-          </svg>
-        </span>
-      </button>
-      <div v-show="openSection === 'status'" class="card-body">
-        <p class="ep"><span class="method get">GET</span> <code>{{ EP_STATUS }}</code></p>
-        <div class="code-wrap">
-          <div class="code-head">
-            <span class="code-lang">bash</span>
-            <button class="btn-copy" @click="copyText(curlStatus, 'code-status-curl')" :class="{ copied: copiedKey === 'code-status-curl' }">
-              <span>{{ copiedKey === 'code-status-curl' ? 'Copied!' : 'Copy' }}</span>
-            </button>
-          </div>
-          <pre>{{ curlStatus }}</pre>
+      <!-- AUTENTIKASI -->
+      <div class="card open">
+        <div class="card-head static">
+          <h2><span class="num">02</span> Autentikasi</h2>
         </div>
-        <p>Status: <code>PENDING</code> · <code>PAID</code> · <code>EXPIRED</code></p>
-      </div>
-    </div>
-
-    <div class="card" :class="{ open: openSection === 'webhook' }">
-      <button class="card-head" @click="toggle('webhook')">
-        <h2><span class="num">05</span> Webhook</h2>
-        <span class="chev">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
-            <polyline points="6 9 12 15 18 9"/>
-          </svg>
-        </span>
-      </button>
-      <div v-show="openSection === 'webhook'" class="card-body">
-        <p>Saat pembayaran lunas atau kadaluarsa, kami kirim <code>POST</code> ke <code>callback_url</code> kamu dengan body JSON berikut. Verifikasi header <code>X-Signature</code> sebelum memproses.</p>
-
-        <div class="sub-label">payment.paid</div>
-        <div class="code-wrap">
-          <div class="code-head">
-            <span class="code-lang">json</span>
-            <button class="btn-copy" @click="copyText(payloadPaid, 'code-wh-paid')" :class="{ copied: copiedKey === 'code-wh-paid' }">
-              <span>{{ copiedKey === 'code-wh-paid' ? 'Copied!' : 'Copy' }}</span>
-            </button>
+        <div class="card-body">
+          <p>Semua endpoint diautentikasi pakai <strong>API key</strong> via header <code>Authorization: Bearer</code> (atau <code>X-API-Key</code>). API key dibuat &amp; di-rotate dari halaman <NuxtLink to="/merchant/api-key" class="link">Kredensial API</NuxtLink> — bisa banyak key untuk isolasi per project.</p>
+          <div class="codebox">
+            <div class="codebox-head">
+              <span class="cb-lang">HTTP</span>
+              <button class="cb-copy" @click="copyText('Authorization: Bearer tpv_live_xxx', 'code-auth')" :class="{ copied: copiedKey === 'code-auth' }">
+                <svg v-if="copiedKey !== 'code-auth'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>{{ copiedKey === 'code-auth' ? 'Copied!' : 'Copy' }}</span>
+              </button>
+            </div>
+            <pre class="cb-body" v-html="hlHttp(`Authorization: Bearer tpv_live_xxx
+Content-Type: application/json`)"></pre>
           </div>
-          <pre>{{ payloadPaid }}</pre>
-        </div>
-
-        <div class="sub-label">payment.expired</div>
-        <div class="code-wrap">
-          <div class="code-head">
-            <span class="code-lang">json</span>
-            <button class="btn-copy" @click="copyText(payloadExpired, 'code-wh-exp')" :class="{ copied: copiedKey === 'code-wh-exp' }">
-              <span>{{ copiedKey === 'code-wh-exp' ? 'Copied!' : 'Copy' }}</span>
-            </button>
+          <div class="warn-box">
+            <strong>Jangan pernah</strong> taruh API key di frontend (browser / aplikasi mobile). Semua pemanggilan <code>/api/v1/*</code> harus dari server kamu.
           </div>
-          <pre>{{ payloadExpired }}</pre>
-        </div>
-
-        <div class="sub-label">Headers</div>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Header</th><th>Keterangan</th></tr></thead>
-            <tbody>
-              <tr><td><code>Content-Type</code></td><td><code>application/json</code></td></tr>
-              <tr><td><code>X-Event</code></td><td><code>payment.paid</code> / <code>payment.expired</code></td></tr>
-              <tr><td><code>X-Reference</code></td><td>Reference transaksi</td></tr>
-              <tr><td><code>X-Signature</code></td><td><code>hash_hmac('sha256', raw_body, webhook_secret)</code></td></tr>
-            </tbody>
-          </table>
-        </div>
-
-        <p>Retry otomatis: webhook yang gagal (timeout / non-2xx) dicoba ulang hingga 5 kali dengan jarak yang makin lama. Pastikan endpoint kamu balas <code>200 OK</code> secepatnya — proses bisnis di belakang boleh async.</p>
-      </div>
-    </div>
-
-    <div class="card" :class="{ open: openSection === 'php' }">
-      <button class="card-head" @click="toggle('php')">
-        <h2><span class="num">06</span> Contoh Integrasi — PHP</h2>
-        <span class="chev">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
-            <polyline points="6 9 12 15 18 9"/>
-          </svg>
-        </span>
-      </button>
-      <div v-show="openSection === 'php'" class="card-body">
-        <div class="sub-label">1. Buat Pembayaran (checkout)</div>
-        <div class="code-wrap">
-          <div class="code-head">
-            <span class="code-lang">php</span>
-            <button class="btn-copy" @click="copyText(codeCheckoutPhp, 'code-php-1')" :class="{ copied: copiedKey === 'code-php-1' }">
-              <span>{{ copiedKey === 'code-php-1' ? 'Copied!' : 'Copy' }}</span>
-            </button>
-          </div>
-          <pre>{{ codeCheckoutPhp }}</pre>
-        </div>
-
-        <div class="sub-label">2. Callback Handler (webhook)</div>
-        <div class="code-wrap">
-          <div class="code-head">
-            <span class="code-lang">php</span>
-            <button class="btn-copy" @click="copyText(codeCallbackPhp, 'code-php-2')" :class="{ copied: copiedKey === 'code-php-2' }">
-              <span>{{ copiedKey === 'code-php-2' ? 'Copied!' : 'Copy' }}</span>
-            </button>
-          </div>
-          <pre>{{ codeCallbackPhp }}</pre>
         </div>
       </div>
-    </div>
 
-    <div class="card" :class="{ open: openSection === 'js' }">
-      <button class="card-head" @click="toggle('js')">
-        <h2><span class="num">07</span> Contoh Integrasi — Node.js</h2>
-        <span class="chev">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
-            <polyline points="6 9 12 15 18 9"/>
-          </svg>
-        </span>
-      </button>
-      <div v-show="openSection === 'js'" class="card-body">
-        <div class="sub-label">1. Buat Pembayaran + Express Webhook</div>
-        <div class="code-wrap">
-          <div class="code-head">
-            <span class="code-lang">javascript</span>
-            <button class="btn-copy" @click="copyText(codeNode, 'code-node')" :class="{ copied: copiedKey === 'code-node' }">
-              <span>{{ copiedKey === 'code-node' ? 'Copied!' : 'Copy' }}</span>
-            </button>
+      <!-- BUAT PEMBAYARAN -->
+      <div class="card open">
+        <div class="card-head static">
+          <h2><span class="num">03</span> Buat Pembayaran QRIS</h2>
+        </div>
+        <div class="card-body">
+          <p class="ep"><span class="method post">POST</span> <code>{{ EP_CREATE }}</code></p>
+
+          <div class="sub-label">Body Request</div>
+          <div class="codebox">
+            <div class="codebox-head">
+              <span class="cb-lang">JSON</span>
+              <button class="cb-copy" @click="copyText(bodyCreate, 'code-create-body')" :class="{ copied: copiedKey === 'code-create-body' }">
+                <svg v-if="copiedKey !== 'code-create-body'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>{{ copiedKey === 'code-create-body' ? 'Copied!' : 'Copy' }}</span>
+              </button>
+            </div>
+            <pre class="cb-body" v-html="hlJson(bodyCreate)"></pre>
           </div>
-          <pre>{{ codeNode }}</pre>
+
+          <div class="sub-label">Parameter</div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Parameter</th><th>Wajib</th><th>Keterangan</th></tr></thead>
+              <tbody>
+                <tr><td><code>amount</code></td><td><span class="req">Ya</span></td><td>Nominal pembayaran (integer Rp)</td></tr>
+                <tr><td><code>reference</code></td><td>—</td><td>ID order kamu, unik per transaksi (1–64 karakter: huruf, angka, <code>_</code> <code>.</code> <code>-</code>)</td></tr>
+                <tr><td><code>expires_minutes</code></td><td>—</td><td>Masa berlaku QR dalam menit (default dari server)</td></tr>
+                <tr><td><code>callback_url</code></td><td>—</td><td>URL callback khusus transaksi ini (HTTPS)</td></tr>
+                <tr><td><code>description</code></td><td>—</td><td>Deskripsi produk, maks 200 karakter</td></tr>
+                <tr><td><code>metadata</code></td><td>—</td><td>Object bebas, dibalikin apa adanya</td></tr>
+                <tr><td><code>idempotency_key</code></td><td>—</td><td>Cegah duplikat saat retry (atau header <code>Idempotency-Key</code>)</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="sub-label">Contoh cURL</div>
+          <div class="codebox">
+            <div class="codebox-head">
+              <span class="cb-lang">BASH</span>
+              <button class="cb-copy" @click="copyText(curlCreate, 'code-curl-create')" :class="{ copied: copiedKey === 'code-curl-create' }">
+                <svg v-if="copiedKey !== 'code-curl-create'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>{{ copiedKey === 'code-curl-create' ? 'Copied!' : 'Copy' }}</span>
+              </button>
+            </div>
+            <pre class="cb-body" v-html="hlBash(curlCreate)"></pre>
+          </div>
+
+          <div class="sub-label">Response <span class="ok-code">201</span></div>
+          <div class="codebox tall">
+            <div class="codebox-head">
+              <span class="cb-lang">JSON</span>
+              <button class="cb-copy" @click="copyText(responseCreate, 'code-res-create')" :class="{ copied: copiedKey === 'code-res-create' }">
+                <svg v-if="copiedKey !== 'code-res-create'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>{{ copiedKey === 'code-res-create' ? 'Copied!' : 'Copy' }}</span>
+              </button>
+            </div>
+            <pre class="cb-body" v-html="hlJson(responseCreate)"></pre>
+          </div>
+
+          <div class="warn-box">
+            <code>fee</code> &amp; <code>net</code> otomatis dihitung dari setting fee (persen) — nominal yang diterima merchant = <code>amount - fee</code>. Customer bayar persis <code>amount</code>.
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="card" :class="{ open: openSection === 'errors' }">
-      <button class="card-head" @click="toggle('errors')">
-        <h2><span class="num">08</span> Error Codes</h2>
-        <span class="chev">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
-            <polyline points="6 9 12 15 18 9"/>
-          </svg>
-        </span>
-      </button>
-      <div v-show="openSection === 'errors'" class="card-body">
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Code</th><th>Artinya</th></tr></thead>
-            <tbody>
-              <tr><td><code>400</code></td><td>Body tidak valid / amount kurang dari minimum</td></tr>
-              <tr><td><code>401</code></td><td>API key tidak ada atau salah</td></tr>
-              <tr><td><code>403</code></td><td>API key diblokir / nonaktif</td></tr>
-              <tr><td><code>404</code></td><td>Transaksi tidak ditemukan</td></tr>
-              <tr><td><code>409</code></td><td>Reference sudah dipakai transaksi lain</td></tr>
-              <tr><td><code>429</code></td><td>Terlalu banyak request — coba lagi nanti</td></tr>
-              <tr><td><code>500</code></td><td>Error server, coba lagi atau hubungi support</td></tr>
-            </tbody>
-          </table>
+      <!-- CEK STATUS -->
+      <div class="card">
+        <button class="card-head" @click="toggle('status')">
+          <h2><span class="num">04</span> Cek Status Pembayaran</h2>
+          <span class="chev">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="6 9 12 15 18 9"/></svg>
+          </span>
+        </button>
+        <div v-show="openSection === 'status'" class="card-body">
+          <p class="ep"><span class="method get">GET</span> <code>{{ EP_STATUS }}</code></p>
+          <p>Untuk polling status atau konfirmasi akhir setelah callback. Status yang mungkin: <code>PENDING</code> · <code>PAID</code> · <code>EXPIRED</code>.</p>
+          <div class="codebox tall">
+            <div class="codebox-head">
+              <div class="cb-tabs">
+                <button class="cb-tab" :class="{ on: boxTab.status === 'req' }" @click="boxTab.status = 'req'">REQUEST</button>
+                <button class="cb-tab" :class="{ on: boxTab.status === 'res' }" @click="boxTab.status = 'res'">RESPONSE <span class="cb-code">200</span></button>
+              </div>
+              <button class="cb-copy" @click="copyText(boxTab.status === 'req' ? curlStatus : responseStatus, 'cb-status')" :class="{ copied: copiedKey === 'cb-status' }">
+                <svg v-if="copiedKey !== 'cb-status'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>{{ copiedKey === 'cb-status' ? 'Copied!' : 'Copy' }}</span>
+              </button>
+            </div>
+            <pre v-if="boxTab.status === 'req'" class="cb-body" v-html="hlBash(curlStatus)"></pre>
+            <pre v-else class="cb-body" v-html="hlJson(responseStatus)"></pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- CANCEL & REPLAY -->
+      <div class="card">
+        <button class="card-head" @click="toggle('cancel')">
+          <h2><span class="num">05</span> Cancel &amp; Replay Callback</h2>
+          <span class="chev">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="6 9 12 15 18 9"/></svg>
+          </span>
+        </button>
+        <div v-show="openSection === 'cancel'" class="card-body">
+          <p class="ep"><span class="method post">POST</span> <code>{{ EP_CANCEL }}</code></p>
+          <p>Batalkan transaksi yang masih <code>PENDING</code> — statusnya langsung jadi <code>EXPIRED</code> dan QR-nya tidak bisa dipakai lagi. Sudah <code>PAID</code>? Nggak bisa dibatalkan.</p>
+
+          <p class="ep" style="margin-top:18px"><span class="method post">POST</span> <code>{{ EP_REPLAY }}</code></p>
+          <p>Kirim ulang callback terakhir secara manual — berguna kalau server kamu sempat down dan mau memastikan notifikasi sampai. Transaksi masih <code>PENDING</code> nggak ada yang bisa dikirim.</p>
+          <div class="codebox">
+            <div class="codebox-head">
+              <span class="cb-lang">BASH</span>
+              <button class="cb-copy" @click="copyText(curlReplay, 'code-replay')" :class="{ copied: copiedKey === 'code-replay' }">
+                <svg v-if="copiedKey !== 'code-replay'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>{{ copiedKey === 'code-replay' ? 'Copied!' : 'Copy' }}</span>
+              </button>
+            </div>
+            <pre class="cb-body" v-html="hlBash(curlReplay)"></pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- CALLBACK -->
+      <div class="card open">
+        <div class="card-head static">
+          <h2><span class="num">06</span> Callback Pembayaran</h2>
+        </div>
+        <div class="card-body">
+          <p>Saat pembayaran lunas atau kadaluarsa, server kirim <code>POST</code> JSON langsung ke <code>callback_url</code> kamu — <strong>tanpa signature</strong>, tinggal cocokkan <code>data.reference</code> dengan order kamu. Balas <code>2xx</code> biar retry berhenti.</p>
+
+          <div class="sub-label">Event payment.paid</div>
+          <div class="codebox">
+            <div class="codebox-head">
+              <span class="cb-lang">JSON</span>
+              <button class="cb-copy" @click="copyText(payloadPaid, 'code-wh-paid')" :class="{ copied: copiedKey === 'code-wh-paid' }">
+                <svg v-if="copiedKey !== 'code-wh-paid'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>{{ copiedKey === 'code-wh-paid' ? 'Copied!' : 'Copy' }}</span>
+              </button>
+            </div>
+            <pre class="cb-body" v-html="hlJson(payloadPaid)"></pre>
+          </div>
+
+          <div class="sub-label">Event payment.expired</div>
+          <div class="codebox">
+            <div class="codebox-head">
+              <span class="cb-lang">JSON</span>
+              <button class="cb-copy" @click="copyText(payloadExpired, 'code-wh-exp')" :class="{ copied: copiedKey === 'code-wh-exp' }">
+                <svg v-if="copiedKey !== 'code-wh-exp'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>{{ copiedKey === 'code-wh-exp' ? 'Copied!' : 'Copy' }}</span>
+              </button>
+            </div>
+            <pre class="cb-body" v-html="hlJson(payloadExpired)"></pre>
+          </div>
+
+          <div class="sub-label">Headers</div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Header</th><th>Keterangan</th></tr></thead>
+              <tbody>
+                <tr><td><code>Content-Type</code></td><td><code>application/json</code></td></tr>
+                <tr><td><code>X-Event</code></td><td><code>payment.paid</code> / <code>payment.expired</code></td></tr>
+                <tr><td><code>X-Trx-Id</code></td><td>ID transaksi (sama dengan reference)</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="sub-label">Handler Callback (Node.js)</div>
+          <div class="codebox">
+            <div class="codebox-head">
+              <span class="cb-lang">JAVASCRIPT</span>
+              <button class="cb-copy" @click="copyText(codeHandlerNode, 'code-handler')" :class="{ copied: copiedKey === 'code-handler' }">
+                <svg v-if="copiedKey !== 'code-handler'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>{{ copiedKey === 'code-handler' ? 'Copied!' : 'Copy' }}</span>
+              </button>
+            </div>
+            <pre class="cb-body" v-html="hlGeneric(codeHandlerNode)"></pre>
+          </div>
+
+          <p>Retry otomatis: kalau gagal (timeout / non-2xx) dicoba ulang maksimal <strong>12x</strong> dengan jarak makin lama (30 detik → 15 menit), timeout per request 10 detik. Riwayat pengiriman keliatan di halaman <NuxtLink to="/merchant/webhook" class="link">Webhook</NuxtLink>.</p>
+          <p>Alamat tujuan callback, urutannya: <code>callback_url</code> per transaksi → URL webhook yang diisi di dashboard → env <code>WEBHOOK_URL</code>. Kalau nggak ada satupun, callback nggak dikirim — pakai polling <code>GET</code> status aja.</p>
+        </div>
+      </div>
+
+      <!-- CONTOH LENGKAP -->
+      <div class="card">
+        <button class="card-head" @click="toggle('contoh')">
+          <h2><span class="num">07</span> Contoh Integrasi — PHP</h2>
+          <span class="chev">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="6 9 12 15 18 9"/></svg>
+          </span>
+        </button>
+        <div v-show="openSection === 'contoh'" class="card-body">
+          <div class="sub-label">1. Buat Pembayaran (checkout)</div>
+          <div class="codebox">
+            <div class="codebox-head">
+              <span class="cb-lang">PHP</span>
+              <button class="cb-copy" @click="copyText(codeCheckoutPhp, 'code-php-1')" :class="{ copied: copiedKey === 'code-php-1' }">
+                <svg v-if="copiedKey !== 'code-php-1'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>{{ copiedKey === 'code-php-1' ? 'Copied!' : 'Copy' }}</span>
+              </button>
+            </div>
+            <pre class="cb-body" v-html="hlGeneric(codeCheckoutPhp)"></pre>
+          </div>
+
+          <div class="sub-label">2. Callback Handler</div>
+          <div class="codebox">
+            <div class="codebox-head">
+              <span class="cb-lang">PHP</span>
+              <button class="cb-copy" @click="copyText(codeCallbackPhp, 'code-php-2')" :class="{ copied: copiedKey === 'code-php-2' }">
+                <svg v-if="copiedKey !== 'code-php-2'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>{{ copiedKey === 'code-php-2' ? 'Copied!' : 'Copy' }}</span>
+              </button>
+            </div>
+            <pre class="cb-body" v-html="hlGeneric(codeCallbackPhp)"></pre>
+          </div>
+
+          <div class="sub-label">3. Tampilkan QR</div>
+          <div class="codebox">
+            <div class="codebox-head">
+              <span class="cb-lang">HTML</span>
+              <button class="cb-copy" @click="copyText(codeQrHtml, 'code-qr')" :class="{ copied: copiedKey === 'code-qr' }">
+                <svg v-if="copiedKey !== 'code-qr'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>{{ copiedKey === 'code-qr' ? 'Copied!' : 'Copy' }}</span>
+              </button>
+            </div>
+            <pre class="cb-body" v-html="hlGeneric(codeQrHtml)"></pre>
+          </div>
         </div>
       </div>
     </div>
@@ -359,12 +355,9 @@ Content-Type: application/json</pre>
 </template>
 
 <script setup lang="ts">
-definePageMeta({ layout: 'dashboard' })
-
 const config = useRuntimeConfig()
 const { siteName } = useSiteSettings()
 
-// Base URL dari env: NUXT_PUBLIC_PUBLIC_URL → NUXT_PUBLIC_API_BASE_URL → window origin
 const apiBase = computed(() => {
   const url = config.public.publicUrl || config.public.apiBaseUrl || ''
   if (url) return String(url).replace(/\/+$/, '')
@@ -372,13 +365,16 @@ const apiBase = computed(() => {
   return ''
 })
 
-// ── ENDPOINT — ganti di satu tempat, semua contoh ikut ──
+// ── ENDPOINT — sesuai implementasi API ──
 const EP_CREATE = '/api/v1/qris/create'
 const EP_STATUS = '/api/v1/qris/:reference'
 const EP_QR     = '/api/v1/qris/:reference/qr'
+const EP_CANCEL = '/api/v1/qris/:reference/cancel'
+const EP_REPLAY = '/api/v1/qris/:reference/replay-webhook'
 
-const openSection = ref<string | null>('endpoints')
+const openSection = ref<string | null>(null)
 const copiedKey = ref<string | null>(null)
+const boxTab = reactive<Record<string, 'req' | 'res'>>({ status: 'req' })
 
 function toggle(name: string) {
   openSection.value = openSection.value === name ? null : name
@@ -388,9 +384,7 @@ async function copyText(text: string, key: string) {
   try {
     await navigator.clipboard.writeText(text)
     copiedKey.value = key
-    setTimeout(() => {
-      if (copiedKey.value === key) copiedKey.value = null
-    }, 1800)
+    setTimeout(() => { if (copiedKey.value === key) copiedKey.value = null }, 1800)
   } catch {
     const ta = document.createElement('textarea')
     ta.value = text
@@ -399,93 +393,188 @@ async function copyText(text: string, key: string) {
     try { document.execCommand('copy') } catch {}
     document.body.removeChild(ta)
     copiedKey.value = key
-    setTimeout(() => {
-      if (copiedKey.value === key) copiedKey.value = null
-    }, 1800)
+    setTimeout(() => { if (copiedKey.value === key) copiedKey.value = null }, 1800)
   }
 }
 
+// ── SYNTAX HIGHLIGHT ──
+function esc(s: string) {
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+}
+
+function hlJson(src: string | Record<string, unknown>) {
+  const raw = typeof src === 'string' ? src : JSON.stringify(src, null, 2)
+  return esc(raw).replace(
+    /("(?:\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(?:\s*:)?|\b(?:true|false|null)\b|-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?)/g,
+    (m) => {
+      let cls = 'tk-num'
+      if (m.startsWith('&quot;') || m.startsWith('"')) cls = m.endsWith(':') || m.endsWith('&quot;:') ? 'tk-key' : 'tk-str'
+      else if (m === 'true' || m === 'false') cls = 'tk-bool'
+      else if (m === 'null') cls = 'tk-nil'
+      return `<span class="${cls}">${m}</span>`
+    }
+  )
+}
+
+function hlHttp(src: string) {
+  return esc(src)
+    .replace(/^([A-Za-z-]+):/gm, '<span class="tk-key">$1</span>:')
+    .replace(/(Bearer)([^\n<]*)/g, '<span class="tk-str">$1$2</span>')
+}
+
+function hlBash(src: string | Record<string, unknown>) {
+  const raw = typeof src === 'string' ? src : JSON.stringify(src, null, 2)
+  return esc(raw)
+    .replace(/(&#39;|')([^']*?)\1/g, (m) => `<span class="tk-str">${m}</span>`)
+    .replace(/(\\)(?=\n)/g, '<span class="tk-pn">\\</span>')
+    .replace(/(-X|-H|-d)(?=\s)/g, '<span class="tk-key">$1</span>')
+    .replace(/(^curl)/gm, '<span class="tk-fn">curl</span>')
+}
+
+function hlGeneric(src: string | Record<string, unknown>) {
+  const raw = typeof src === 'string' ? src : JSON.stringify(src, null, 2)
+  return esc(raw)
+    .replace(/(^|[^:'"])\/\/[^\n]*/g, (m, p) => `${p}<span class="tk-cm">//${m.slice(p.length + 2)}</span>`)
+    .replace(/('(?:[^'\\\n]|\\.)*')/g, '<span class="tk-str">$1</span>')
+    .replace(/(&quot;.*?&quot;)/g, '<span class="tk-str">$1</span>')
+    .replace(/\b(const|let|var|function|return|await|async|if|else|new|throw|require|import|from|export|true|false|null)\b/g, '<span class="tk-kw">$1</span>')
+}
+
+// ── CONTOH VALUES ──
+const REF     = 'TPV-K8M4XQ2R-VN7WZL'
+const AMOUNT  = 50000
+const FEE     = 1450   // 2.9% dari setting fee_transaction_percent
+const NET     = AMOUNT - FEE
+
 const bodyCreate = `{
-  "amount": 50000,
-  "reference": "ORDER-10001",
-  "callback_url": "https://toko-kamu.com/webhook",
+  "amount": ${AMOUNT},
+  "reference": "${REF}",
+  "callback_url": "https://webstore-kamu.com/webhook/tokopay",
   "expires_minutes": 15,
+  "description": "Sepatu Sneakers Putih",
   "metadata": {
-    "order_id": 10001,
-    "product": "Kaos Polos Hitam"
+    "order_id": "TPV-2043",
+    "product": "Sepatu Sneakers Putih"
   }
 }`
 
 const curlCreate = computed(() => `curl -X POST ${apiBase.value}${EP_CREATE} \\
-  -H "Authorization: Bearer <API_KEY_KAMU>" \\
+  -H "Authorization: Bearer tpv_live_xxx" \\
   -H "Content-Type: application/json" \\
   -d '{
-    "amount": 50000,
-    "reference": "ORDER-10001",
-    "callback_url": "https://toko-kamu.com/webhook",
-    "expires_minutes": 15
+    "amount": ${AMOUNT},
+    "reference": "${REF}",
+    "callback_url": "https://webstore-kamu.com/webhook/tokopay",
+    "expires_minutes": 15,
+    "metadata": { "order_id": "TPV-2043" }
   }'`)
 
 const responseCreate = computed(() => `{
   "success": true,
   "data": {
-    "reference": "ORDER-10001",
+    "reference": "${REF}",
+    "trx_id": "${REF}",
     "status": "PENDING",
     "payment_method": "QRIS",
-    "amount": 50000,
-    "fee": 900,
-    "total": 50000,
+    "amount": ${AMOUNT},
+    "fee": ${FEE},
+    "total": ${AMOUNT},
+    "net": ${NET},
+    "currency": "IDR",
     "qr_string": "00020101021226580014ID.CO.QRIS.WWW...",
-    "qr_image": "${apiBase.value}/api/v1/qris/ORDER-10001/qr",
-    "expires_at": "2026-10-09T07:15:00.000Z",
-    "created_at": "2026-10-09T07:00:00.000Z"
+    "qr_image": "${apiBase.value}/api/v1/qris/${REF}/qr",
+    "expires_at": "2026-10-18T02:30:00.000Z",
+    "created_at": "2026-10-18T02:15:00.000Z"
   }
 }`)
 
-const curlStatus = computed(() => `curl ${apiBase.value}/api/v1/qris/ORDER-10001 \\
-  -H "Authorization: Bearer <API_KEY_KAMU>"`)
+const curlStatus = computed(() => `curl ${apiBase.value}/api/v1/qris/${REF} \\
+  -H "Authorization: Bearer tpv_live_xxx"`)
+
+const responseStatus = computed(() => `{
+  "success": true,
+  "data": {
+    "reference": "${REF}",
+    "trx_id": "${REF}",
+    "status": "PAID",
+    "payment_method": "QRIS",
+    "amount": ${AMOUNT},
+    "fee": ${FEE},
+    "total": ${AMOUNT},
+    "net": ${NET},
+    "currency": "IDR",
+    "paid_at": "2026-10-18T02:21:00.000Z",
+    "expires_at": "2026-10-18T02:30:00.000Z"
+  }
+}`)
+
+const curlReplay = computed(() => `curl -X POST ${apiBase.value}/api/v1/qris/${REF}/replay-webhook \\
+  -H "Authorization: Bearer tpv_live_xxx"`)
 
 const payloadPaid = computed(() => `{
   "event": "payment.paid",
+  "success": true,
   "data": {
-    "reference": "ORDER-10001",
+    "reference": "${REF}",
     "status": "PAID",
-    "payment_method": "QRIS",
-    "amount": 50000,
-    "fee": 900,
-    "net": 49100,
+    "paymentMethod": "QRIS",
+    "amount": ${AMOUNT},
+    "fee": ${FEE},
+    "net": ${NET},
+    "amountToPay": ${AMOUNT},
     "currency": "IDR",
-    "paid_at": "2026-10-09T07:05:00.000Z",
-    "metadata": {
-      "order_id": 10001,
-      "product": "Kaos Polos Hitam"
-    }
+    "customerName": "Budi",
+    "customerEmail": "budi@mail.com",
+    "description": "Sepatu Sneakers Putih",
+    "createdAt": "2026-10-18T02:15:00.000Z",
+    "expiresAt": "2026-10-18T02:30:00.000Z",
+    "paidAt": "2026-10-18T02:21:00.000Z"
   }
 }`)
 
 const payloadExpired = computed(() => `{
   "event": "payment.expired",
+  "success": true,
   "data": {
-    "reference": "ORDER-10001",
+    "reference": "${REF}",
     "status": "EXPIRED",
-    "payment_method": "QRIS",
-    "amount": 50000,
+    "paymentMethod": "QRIS",
+    "amount": ${AMOUNT},
+    "fee": ${FEE},
+    "net": ${NET},
+    "amountToPay": ${AMOUNT},
     "currency": "IDR",
-    "expires_at": "2026-10-09T07:15:00.000Z",
-    "metadata": {
-      "order_id": 10001,
-      "product": "Kaos Polos Hitam"
-    }
+    "customerName": null,
+    "customerEmail": null,
+    "description": "Sepatu Sneakers Putih",
+    "createdAt": "2026-10-18T02:15:00.000Z",
+    "expiresAt": "2026-10-18T02:30:00.000Z",
+    "paidAt": null
   }
 }`)
 
-const codeQrHtml = `<img src="{qr_image dari response}" alt="QRIS" width="280">`
+const codeHandlerNode = `// Express — handler callback TokoPay
+app.post('/webhook/tokopay', express.json(), (req, res) => {
+  const event = req.headers['x-event']   // payment.paid / payment.expired
+  const trxId = req.headers['x-trx-id']  // ID transaksi
+  const data  = req.body.data            // { reference, status, amount, fee, net, ... }
+
+  if (event === 'payment.paid') {
+    // tandai order lunas: data.reference, data.amount, data.net
+  }
+  if (event === 'payment.expired') {
+    // tandai order kadaluarsa
+  }
+
+  // WAJIB balas 2xx biar retry berhenti
+  res.status(200).json({ received: true })
+})`
 
 const codeCheckoutPhp = computed(() => `<?php
 // ============================================
-// BUAT PEMBAYARAN — dipanggil saat checkout
+// 1. BUAT PEMBAYARAN — dipanggil saat checkout
 // ============================================
- $apiKey  = getenv('UNOPAY_API_KEY');
+ $apiKey  = getenv('API_KEY');
  $baseUrl = '${apiBase.value}';
 
 function createQrisPayment(string $apiKey, string $baseUrl, array $order): array
@@ -493,7 +582,7 @@ function createQrisPayment(string $apiKey, string $baseUrl, array $order): array
     $payload = json_encode([
         'amount'          => $order['amount'],
         'reference'       => $order['reference'],
-        'callback_url'    => 'https://toko-kamu.com/webhook/unopay',
+        'callback_url'    => 'https://webstore-kamu.com/webhook/tokopay',
         'expires_minutes' => 15,
         'metadata'        => [
             'order_id' => $order['id'],
@@ -517,7 +606,7 @@ function createQrisPayment(string $apiKey, string $baseUrl, array $order): array
     $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     curl_close($ch);
 
-    if ($code !== 200) {
+    if ($code !== 201 && $code !== 200) {
         throw new RuntimeException("Gagal membuat pembayaran (HTTP $code): $body");
     }
 
@@ -526,234 +615,136 @@ function createQrisPayment(string $apiKey, string $baseUrl, array $order): array
 
 // --- contoh pemanggilan ---
  $payment = createQrisPayment($apiKey, $baseUrl, [
-    'id'        => 10001,
-    'reference' => 'ORDER-10001',
-    'amount'    => 50000,
-    'product'   => 'Kaos Polos Hitam',
+    'id'        => 'TPV-2043',
+    'reference' => '${REF}',
+    'amount'    => ${AMOUNT},
+    'product'   => 'Sepatu Sneakers Putih',
 ]);
 
-// simpan reference untuk pencocokan webhook:
+// simpan reference untuk pencocokan callback
 // UPDATE orders SET reference = ? WHERE id = ?
 echo $payment['qr_image'];`)
 
 const codeCallbackPhp = `<?php
 // ==================================================
-// CALLBACK HANDLER — https://toko-kamu.com/webhook/unopay
+// 2. CALLBACK HANDLER — https://webstore-kamu.com/webhook/tokopay
+//    Simpan file ini sebagai webhook/tokopay/index.php
 // ==================================================
 
- $webhookSecret = getenv('UNOPAY_WEBHOOK_SECRET');
- $rawBody       = file_get_contents('php://input');
+ $rawBody = file_get_contents('php://input');
+ $event   = json_decode($rawBody, true);
 
-// ── 1. Verifikasi signature (WAJIB, jangan skip) ──
- $expectedSig = hash_hmac('sha256', $rawBody, $webhookSecret);
- $receivedSig = $_SERVER['HTTP_X_SIGNATURE'] ?? '';
-
-if (!hash_equals($expectedSig, $receivedSig)) {
-    http_response_code(403);
-    error_log('[unopay] signature invalid');
-    exit;
-}
-
-// ── 2. Parse payload ──
- $event = json_decode($rawBody, true);
 if (json_last_error() !== JSON_ERROR_NONE) {
     http_response_code(400);
     exit;
 }
 
- $reference = $event['data']['reference'] ?? null;
- $status    = $event['data']['status']    ?? null;
- $amount    = $event['data']['amount']    ?? 0;
- $net       = $event['data']['net']       ?? 0;
- $metadata  = $event['data']['metadata']  ?? [];
- $orderId   = $metadata['order_id']       ?? null;
+// ── 1. Baca event dari header ──
+ $eventName = $_SERVER['HTTP_X_EVENT'] ?? '';   // payment.paid / payment.expired
+ $reference = $event['data']['reference'] ?? '';
 
-// ── 3. Idempotency — webhook bisa datang lebih dari sekali ──
-// SELECT 1 FROM processed_webhooks WHERE reference = ?
-// → kalau sudah ada, langsung balas 200 tanpa proses ulang
+// ── 2. Proses berdasarkan event ──
+switch ($eventName) {
+    case 'payment.paid':
+        // UPDATE orders SET status = 'PAID' WHERE reference = ?
+        break;
 
-if ($event['event'] === 'payment.paid') {
-    // ── 4. PENTING: cocokkan nominal dengan order di database kamu ──
-    // SELECT amount FROM orders WHERE id = ?
-    // if ((int)$amount !== (int)$orderAmount) { log & reject; }
-
-    // Tandai lunas dalam TRANSACTION:
-    // BEGIN;
-    // UPDATE orders SET status='paid', paid_at=NOW() WHERE id = ? AND status != 'paid';
-    // UPDATE wallet SET balance = balance + ? WHERE user_id = ?;  // $net
-    // INSERT INTO processed_webhooks (reference) VALUES (?);
-    // COMMIT;
-
-    error_log("[unopay] PAID ref=$reference orderId=$orderId net=$net");
-
-} elseif ($event['event'] === 'payment.expired') {
-    // UPDATE orders SET status='expired' WHERE id = ? AND status = 'pending';
-    error_log("[unopay] EXPIRED ref=$reference");
+    case 'payment.expired':
+        // UPDATE orders SET status = 'EXPIRED' WHERE reference = ?
+        break;
 }
 
-// ── 5. Selalu balas 200 cepat — retry akan berhenti ──
+// ── 3. WAJIB balas 2xx biar retry berhenti ──
 http_response_code(200);
 echo 'OK';`
 
-const codeNode = computed(() => `// ============================================
-// 1. Buat pembayaran
-// ============================================
-const API_KEY = process.env.UNOPAY_API_KEY;
-const BASE_URL = '${apiBase.value}';
-
-async function createQrisPayment({ amount, reference, metadata }) {
-  const res = await fetch(BASE_URL + '/api/v1/qris/create', {
-    method: 'POST',
-    headers: {
-      'Authorization': \`Bearer \${API_KEY}\`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      amount,
-      reference,
-      callback_url: 'https://toko-kamu.com/webhook/unopay',
-      expires_minutes: 15,
-      metadata,
-    }),
-  });
-
-  if (!res.ok) {
-    throw new Error(\`Gagal membuat pembayaran: \${res.status} \${await res.text()}\`);
-  }
-
-  const { data } = await res.json();
-  return data; // { reference, qr_image, qr_string, expires_at, ... }
-}
-
-// --- contoh di Express route checkout ---
-app.post('/checkout', async (req, res) => {
-  const payment = await createQrisPayment({
-    amount: 50000,
-    reference: 'ORDER-' + Date.now(),
-    metadata: { order_id: req.body.orderId },
-  });
-
-  // simpan payment.reference ke order kamu, lalu render halaman bayar
-  res.render('pay', { payment });
-});
-
-// ============================================
-// 2. Webhook handler — verifikasi HMAC
-// ============================================
-import crypto from 'node:crypto';
-
-app.post('/webhook/unopay',
-  express.raw({ type: 'application/json' }), // WAJIB raw biar HMAC match
-  (req, res) => {
-    const expected = crypto
-      .createHmac('sha256', process.env.UNOPAY_WEBHOOK_SECRET)
-      .update(req.body)
-      .digest('hex');
-
-    const received = req.headers['x-signature'];
-    if (!crypto.timingSafeEqual(
-      Buffer.from(expected),
-      Buffer.from(received || ''),
-    )) {
-      return res.status(403).send('invalid signature');
-    }
-
-    const event = JSON.parse(req.body.toString());
-
-    if (event.event === 'payment.paid') {
-      const { reference, amount, net, metadata } = event.data;
-      // tandai lunas, cocokkan amount dengan order kamu dulu
-      console.log('PAID', reference, amount, net, metadata);
-    }
-
-    res.status(200).send('OK');
-  }
-);`)
-
-useHead({ title: 'Dokumentasi API — ' + (siteName.value || 'UnoPay') })
+const codeQrHtml = `<img src="{qr_image dari response}" alt="QRIS" width="280">`
 </script>
 
 <style scoped>
-* { box-sizing: border-box; }
-.docs { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 0 60px; color: var(--txt, #16121f); font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; }
+.docs-page { min-height: 100vh; background: #f7f6fb; color: #241f35; font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; }
+.docs-page a { color: inherit; }
+.docs-page ::selection { background: rgba(124,58,237,.18); }
+.docs-page .wrap { max-width: 1060px; margin: 0 auto; padding: 40px 20px 80px; }
 
-.hero { margin-bottom: 26px; padding: 8px 0 0; }
-.hero-eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 10.5px; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase; color: var(--vio, #7c3aed); margin-bottom: 12px; padding: 6px 12px; background: rgba(124,58,237,0.06); border: 1px solid rgba(124,58,237,0.18); border-radius: 999px; }
-.hero-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--vio, #7c3aed); box-shadow: 0 0 0 3px rgba(124,58,237,0.15); }
-.hero h1 { font-size: 32px; font-weight: 800; letter-spacing: -0.03em; color: var(--txt, #16121f); line-height: 1.15; }
-.hero-sub { font-size: 14px; color: var(--dim, #6f6a80); margin-top: 10px; line-height: 1.6; max-width: 640px; }
-.hero-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 16px; }
-.hero-tag { padding: 4px 10px; background: var(--bg-soft, #f9f8fc); border: 1px solid var(--line, #eceaf4); border-radius: 999px; font-size: 11px; font-weight: 700; color: var(--dim, #6f6a80); font-family: ui-monospace, monospace; }
+/* HERO */
+.docs-page .hero { text-align: center; margin-bottom: 30px; }
+.docs-page .hero-eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 12.5px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: #7c3aed; background: rgba(124,58,237,.07); border: 1px solid rgba(124,58,237,.22); padding: 6px 14px; border-radius: 999px; }
+.docs-page .hero-dot { width: 7px; height: 7px; border-radius: 50%; background: #7c3aed; box-shadow: 0 0 0 3px rgba(124,58,237,.15); }
+.docs-page .hero h1 { font-size: clamp(32px, 5.5vw, 48px); font-weight: 800; letter-spacing: -.04em; margin: 18px 0 10px; color: #1c1730; }
+.docs-page .hero-sub { color: #6f6a85; font-size: 16px; }
+.docs-page .hero-tags { display: flex; gap: 8px; justify-content: center; margin-top: 16px; flex-wrap: wrap; }
+.docs-page .hero-tag { font-size: 12px; font-weight: 650; color: #55506e; background: #fff; border: 1px solid #e5e1f2; padding: 5px 12px; border-radius: 999px; }
 
-.info-box { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; background: var(--bg-soft, #f9f8fc); border: 1px solid var(--line, #eceaf4); border-radius: 16px; padding: 18px 20px; margin-bottom: 22px; }
-@media (max-width: 640px) { .info-box { grid-template-columns: 1fr; } }
-.info-col { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
-.info-label { font-size: 10.5px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: var(--dim, #6f6a80); }
-.info-value-wrap { display: flex; gap: 6px; align-items: stretch; min-width: 0; }
-.info-value { flex: 1; background: #ffffff; border: 1px solid var(--line-2, #ddd9ee); border-radius: 9px; padding: 9px 12px; font-size: 12.5px; font-family: ui-monospace, monospace; color: var(--vio-deep, #5b21b6); word-break: break-all; display: block; min-width: 0; line-height: 1.5; white-space: pre-line; font-weight: 700; }
-.info-copy { width: 38px; flex-shrink: 0; background: #ffffff; border: 1px solid var(--line, #eceaf4); border-radius: 9px; color: var(--dim, #6f6a80); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.18s; }
-.info-copy svg { width: 14px; height: 14px; }
-.info-copy:hover { border-color: var(--vio-2, #a78bfa); color: var(--vio, #7c3aed); }
-.info-copy.copied { background: var(--grad, linear-gradient(135deg, #7c3aed, #d946ef)); border-color: transparent; color: #ffffff; }
+/* INFO BOX */
+.docs-page .info-box { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 6px 0 22px; }
+.docs-page .info-col { background: #fff; border: 1px solid #e9e5f4; border-radius: 16px; padding: 16px 18px; }
+.docs-page .info-label { font-size: 11px; font-weight: 750; letter-spacing: .14em; text-transform: uppercase; color: #8d88a6; margin-bottom: 8px; }
+.docs-page .info-value-wrap { display: flex; align-items: center; gap: 10px; }
+.docs-page .info-value { font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace; font-size: 13px; color: #6d28d9; word-break: break-all; flex: 1; font-weight: 650; }
+.docs-page .info-copy { flex: none; width: 30px; height: 30px; display: grid; place-items: center; border-radius: 8px; border: 1px solid #e5e1f2; background: #faf9fe; color: #6f6a85; cursor: pointer; }
+.docs-page .info-copy svg { width: 14px; height: 14px; }
+.docs-page .info-copy.copied { color: #059669; border-color: rgba(5,150,105,.4); }
 
-.warn-box { display: flex; gap: 10px; align-items: flex-start; margin-top: 14px; padding: 12px 14px; background: rgba(245, 158, 11, 0.06); border: 1px solid rgba(245, 158, 11, 0.25); border-radius: 10px; font-size: 12.5px; line-height: 1.6; color: #92400e; }
-.warn-box svg { width: 16px; height: 16px; flex-shrink: 0; margin-top: 1px; color: #d97706; }
-.warn-box strong { color: #b45309; }
+/* CARDS / SECTIONS */
+.docs-page .card { background: #fff; border: 1px solid #e9e5f4; border-radius: 18px; margin-bottom: 16px; overflow: hidden; }
+.docs-page .card-head { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 18px 22px; background: none; border: none; cursor: pointer; text-align: left; }
+.docs-page .card-head.static { cursor: default; }
+.docs-page .card-head h2 { font-size: 17px; font-weight: 800; color: #1c1730; display: flex; align-items: center; gap: 12px; margin: 0; }
+.docs-page .num { font-size: 12px; font-weight: 800; color: #7c3aed; background: rgba(124,58,237,.08); border: 1px solid rgba(124,58,237,.22); padding: 4px 9px; border-radius: 8px; }
+.docs-page .chev { color: #8d88a6; }
+.docs-page .chev svg { width: 18px; height: 18px; }
+.docs-page .card-body { padding: 4px 22px 22px; }
+.docs-page .card-body > p { font-size: 14px; line-height: 1.75; color: #55506e; margin: 10px 0; }
+.docs-page .card-body code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 12.5px; background: rgba(124,58,237,.07); color: #6d28d9; padding: 2px 7px; border-radius: 6px; font-weight: 650; }
+.docs-page .ep { display: flex; align-items: center; gap: 10px; margin: 12px 0; }
+.docs-page .ep code { font-size: 13.5px; background: #14101f; border: 1px solid #2a2338; color: #7dd3fc; }
+.docs-page .link { color: #7c3aed; font-weight: 650; }
+.docs-page .method { font-size: 11px; font-weight: 800; letter-spacing: .06em; padding: 4px 10px; border-radius: 7px; }
+.docs-page .method.post { background: rgba(124,58,237,.08); color: #7c3aed; border: 1px solid rgba(124,58,237,.25); }
+.docs-page .method.get { background: rgba(5,150,105,.08); color: #059669; border: 1px solid rgba(5,150,105,.25); }
+.docs-page .sub-label { font-size: 11.5px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: #8d88a6; margin: 20px 0 10px; }
+.docs-page .req { color: #059669; font-weight: 700; font-size: 12px; }
+.docs-page .ok-code { font-size: 10px; font-weight: 800; color: #34d399; background: rgba(52,211,153,.12); padding: 1px 6px; border-radius: 6px; margin-left: 4px; }
+.docs-page .warn-box { background: rgba(217,119,6,.06); border: 1px solid rgba(217,119,6,.28); border-radius: 12px; padding: 12px 16px; font-size: 13.5px; line-height: 1.7; color: #92400e; margin: 14px 0; }
+.docs-page .warn-box code { background: rgba(217,119,6,.1); color: #b45309; }
 
-.card { background: #ffffff; border: 1px solid var(--line, #eceaf4); border-radius: 16px; margin-bottom: 12px; overflow: hidden; transition: border-color 0.2s; box-shadow: 0 1px 2px rgba(88,60,160,0.04), 0 4px 14px rgba(88,60,160,0.05); }
-.card.open { border-color: rgba(124,58,237,0.3); }
-.card-head { width: 100%; display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 20px 22px; background: transparent; border: none; cursor: pointer; font-family: inherit; text-align: left; transition: background 0.15s; -webkit-tap-highlight-color: transparent; }
-.card-head:hover { background: var(--bg-soft, #f9f8fc); }
-.card h2 { display: flex; align-items: center; gap: 12px; font-size: 15.5px; font-weight: 750; color: var(--txt, #16121f); margin: 0; }
-.card h2 .num { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 9px; background: rgba(124,58,237,0.07); border: 1px solid rgba(124,58,237,0.15); color: var(--vio, #7c3aed); font-size: 11.5px; font-weight: 800; font-family: ui-monospace, monospace; flex-shrink: 0; transition: all 0.2s; }
-.card.open h2 .num { background: var(--grad, linear-gradient(135deg, #7c3aed, #d946ef)); border-color: transparent; color: #ffffff; }
-.chev { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 8px; background: var(--bg-soft, #f9f8fc); border: 1px solid var(--line, #eceaf4); color: var(--dim, #6f6a80); flex-shrink: 0; transition: transform 0.28s cubic-bezier(0.22,1,0.36,1), all 0.2s; }
-.chev svg { width: 15px; height: 15px; }
-.card.open .chev { transform: rotate(180deg); background: rgba(124,58,237,0.08); border-color: rgba(124,58,237,0.25); color: var(--vio, #7c3aed); }
-.card-body { padding: 4px 22px 22px; border-top: 1px solid var(--line, #eceaf4); }
-.card p { font-size: 13.5px; color: var(--dim, #6f6a80); line-height: 1.7; margin: 14px 0; }
-.link { color: var(--vio, #7c3aed); text-decoration: underline; }
+/* CODEBOX — dark */
+.docs-page .codebox { background: #14101f; border: 1px solid #2a2338; border-radius: 14px; overflow: hidden; margin: 12px 0; box-shadow: 0 12px 34px -14px rgba(76,29,149,.45); }
+.docs-page .codebox.tall pre.cb-body { max-height: 480px; overflow: auto; }
+.docs-page .codebox-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 9px 14px; background: rgba(255,255,255,.03); border-bottom: 1px solid #241d33; }
+.docs-page .cb-tabs { display: flex; gap: 4px; }
+.docs-page .cb-tab { font-size: 11px; font-weight: 800; letter-spacing: .1em; color: #8d84a3; background: none; border: 1px solid transparent; padding: 6px 12px; border-radius: 8px; cursor: pointer; }
+.docs-page .cb-tab:hover { color: #d9d2ea; }
+.docs-page .cb-tab.on { color: #cdb6ff; background: rgba(124,58,237,.2); border-color: rgba(124,58,237,.4); }
+.docs-page .cb-code { font-size: 10px; font-weight: 800; color: #34d399; background: rgba(52,211,153,.12); padding: 1px 6px; border-radius: 6px; margin-left: 4px; }
+.docs-page .cb-lang { font-size: 11px; font-weight: 800; letter-spacing: .1em; color: #8d84a3; }
+.docs-page .cb-copy { display: inline-flex; align-items: center; gap: 6px; font-size: 11.5px; font-weight: 700; color: #b6aecd; background: rgba(255,255,255,.05); border: 1px solid #2f2840; padding: 5px 11px; border-radius: 8px; cursor: pointer; }
+.docs-page .cb-copy svg { width: 13px; height: 13px; }
+.docs-page .cb-copy:hover { color: #e4dbf5; border-color: rgba(124,58,237,.45); }
+.docs-page .cb-copy.copied { color: #34d399; border-color: rgba(52,211,153,.4); }
+.docs-page pre.cb-body { margin: 0; padding: 16px 18px; overflow-x: auto; font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace; font-size: 12.8px; line-height: 1.7; color: #d4cce6; white-space: pre; }
 
-.sub-label { font-size: 10.5px; font-weight: 800; color: var(--vio, #7c3aed); text-transform: uppercase; letter-spacing: 0.12em; margin: 20px 0 10px; }
-.sub-label:first-child { margin-top: 14px; }
+/* TOKENS */
+.docs-page .tk-key { color: #7dd3fc; }
+.docs-page .tk-str { color: #86efac; }
+.docs-page .tk-num { color: #fbbf24; }
+.docs-page .tk-bool { color: #f472b6; }
+.docs-page .tk-nil { color: #f472b6; }
+.docs-page .tk-cm { color: #6f6a85; font-style: italic; }
+.docs-page .tk-kw { color: #cdb6ff; }
+.docs-page .tk-fn { color: #a78bfa; font-weight: 700; }
+.docs-page .tk-pn { color: #55506e; }
 
-.code-wrap { margin: 10px 0; border-radius: 12px; overflow: hidden; border: 1px solid #2a2338; }
-.code-head { display: flex; justify-content: space-between; align-items: center; padding: 8px 14px; background: #17131f; border-bottom: 1px solid #2a2338; }
-.code-lang { font-size: 10.5px; font-weight: 800; color: #8d84a3; letter-spacing: 0.1em; text-transform: uppercase; font-family: ui-monospace, monospace; }
-.btn-copy { display: inline-flex; align-items: center; gap: 6px; padding: 5px 11px; background: rgba(255,255,255,0.05); border: 1px solid #2f2840; border-radius: 7px; font-size: 11px; font-weight: 700; color: #b6aecd; cursor: pointer; font-family: inherit; transition: all 0.18s; }
-.btn-copy:hover { background: rgba(124,58,237,0.2); border-color: rgba(124,58,237,0.4); color: #e4dbf5; }
-.btn-copy.copied { background: rgba(124,58,237,0.3); border-color: rgba(124,58,237,0.5); color: #cdb6ff; }
+/* TABLE */
+.docs-page .table-wrap { overflow-x: auto; border: 1px solid #e9e5f4; border-radius: 12px; margin: 10px 0; }
+.docs-page table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.docs-page th { text-align: left; font-size: 11px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: #8d88a6; background: #faf9fe; padding: 11px 14px; }
+.docs-page td { padding: 11px 14px; border-top: 1px solid #efecf8; color: #3d3757; vertical-align: top; }
 
-pre { background: #17131f; color: #d4cce6; padding: 14px 16px; font-size: 12px; overflow-x: auto; font-family: ui-monospace, 'SF Mono', Menlo, monospace; line-height: 1.7; margin: 0; white-space: pre-wrap; word-break: break-word; }
-code { background: rgba(124,58,237,0.07); border: 1px solid rgba(124,58,237,0.15); padding: 2px 7px; border-radius: 5px; font-size: 12px; font-family: ui-monospace, monospace; color: var(--vio-deep, #5b21b6); font-weight: 700; }
-.ep { display: flex; align-items: center; gap: 10px; margin: 14px 0; flex-wrap: wrap; }
-.ep code { font-size: 13px; }
-.method { padding: 4px 10px; border-radius: 6px; font-size: 10px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; flex-shrink: 0; }
-.method.post { background: rgba(124,58,237,0.1); border: 1px solid rgba(124,58,237,0.25); color: var(--vio, #7c3aed); }
-.method.get { background: rgba(13,148,136,0.08); border: 1px solid rgba(13,148,136,0.22); color: #0d9488; }
-
-.table-wrap { overflow-x: auto; margin: 10px 0 4px; border-radius: 12px; border: 1px solid var(--line, #eceaf4); -webkit-overflow-scrolling: touch; }
-table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 480px; }
-th { text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--line, #eceaf4); color: var(--dim, #6f6a80); font-size: 10.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; white-space: nowrap; background: var(--bg-soft, #f9f8fc); }
-td { padding: 13px 14px; border-bottom: 1px solid var(--line, #eceaf4); color: var(--txt, #16121f); line-height: 1.55; vertical-align: top; background: #ffffff; }
-tr:last-child td { border-bottom: none; }
-tr:hover td { background: var(--bg-soft, #f9f8fc); }
-td code { color: var(--vio-deep, #5b21b6); font-weight: 700; white-space: nowrap; }
-.req { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 10px; font-weight: 800; background: rgba(225,29,72,0.07); border: 1px solid rgba(225,29,72,0.2); color: var(--bad, #e11d48); letter-spacing: 0.04em; }
-
-@media (max-width: 640px) {
-  .docs { padding: 0 0 40px; }
-  .hero h1 { font-size: 26px; }
-  .hero-sub { font-size: 13px; }
-  .card-head { padding: 16px; }
-  .card-body { padding: 4px 16px 18px; }
-  .card h2 { font-size: 14.5px; gap: 10px; }
-  .card h2 .num { width: 28px; height: 28px; font-size: 10.5px; }
-  pre { font-size: 11px; padding: 12px 13px; line-height: 1.65; }
-  .code-head { padding: 7px 12px; }
-  .btn-copy { padding: 4px 9px; font-size: 10.5px; }
-  .info-box { padding: 16px; gap: 12px; }
-  table { font-size: 12px; min-width: 440px; }
-  th, td { padding: 10px 12px; }
+@media (max-width: 720px) {
+  .docs-page .info-box { grid-template-columns: 1fr; }
+  .docs-page .card-head, .docs-page .card-body { padding-left: 16px; padding-right: 16px; }
+  .docs-page pre.cb-body { font-size: 11.5px; }
 }
 </style>
