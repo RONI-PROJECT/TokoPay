@@ -17,3 +17,5 @@ node_modules/
 output-build.zip
 *.bak*
 *.ts.bak
+
+!.env.example
