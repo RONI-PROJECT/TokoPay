@@ -1,19 +1,24 @@
 <!-- components/SiteLogo.vue -->
 <template>
   <img
-    v-if="logoUrl"
+    v-if="logoUrl && !logoFailed"
     :src="logoUrl"
     :alt="alt || siteName"
     :class="$attrs.class"
+    :style="imgOk ? '' : 'opacity:0'"
+    @load="imgOk = true"
     @error="logoFailed = true"
   />
-  <span v-else-if="logoFailed || !logoUrl" class="logo-fallback">{{ siteName || 'Ronipayment' }}</span>
+  <span v-else-if="ready && (logoFailed || !logoUrl)" class="logo-fallback">{{ siteName || 'TokoPay' }}</span>
 </template>
 
 <script setup lang="ts">
 defineProps<{ alt?: string }>()
-const { logoUrl, siteName } = useSiteSettings()
+const { logoUrl, siteName, load } = useSiteSettings()
 const logoFailed = ref(false)
+const imgOk = ref(false)
+const ready = ref(false)
+onMounted(async () => { await load(); ready.value = true })
 </script>
 
 <style scoped>
@@ -24,5 +29,5 @@ const logoFailed = ref(false)
   color: var(--txt, #16121f);
   white-space: nowrap;
 }
-img { height: 30px; width: auto; display: block; }
+img { height: 30px; width: auto; display: block; transition: opacity .25s ease; }
 </style>

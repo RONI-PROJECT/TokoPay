@@ -23,8 +23,8 @@ export interface SiteSettings {
 }
 
 const defaultSettings: SiteSettings = {
-  site_name: 'UnoPay',
-  site_title: 'UnoPay — Payment Gateway QRIS',
+  site_name: 'TokoPay',
+  site_title: 'TokoPay — Payment Gateway QRIS',
   site_description: 'Payment gateway QRIS untuk merchant Indonesia.',
   site_keywords: 'qris, payment gateway, indonesia',
   logo_url: '',
@@ -33,8 +33,8 @@ const defaultSettings: SiteSettings = {
   hero_lead: 'Satu dashboard untuk merchant: buat QRIS dinamis, pantau transaksi masuk, dan integrasi API yang siap dipasang.',
   marquee_text: 'Didukung berbagai bank & e-wallet',
   marquee_items: 'BCA,Mandiri,BNI,BRI,GoPay,OVO,DANA,ShopeePay',
-  footer_text: 'UnoPay — payment gateway QRIS untuk merchant Indonesia.',
-  footer_copyright: '© 2026 UnoPay. All rights reserved.',
+  footer_text: 'TokoPay — payment gateway QRIS untuk merchant Indonesia.',
+  footer_copyright: '© 2026 TokoPay. All rights reserved.',
   wd_min: 65000,
   wd_fee_percent: 2.5,
   wd_fee_flat: 4500,
@@ -46,6 +46,7 @@ let loadingPromise: Promise<void> | null = null
 let lastLoadAt = 0
 
 const NUMERIC_KEYS = ['wd_min', 'wd_fee_percent', 'wd_fee_flat', 'fee_transaction_percent']
+const CACHE_KEY = 'site_settings_v1'
 
 function normalize(raw: any): SiteSettings {
   const out: any = { ...defaultSettings }
@@ -72,6 +73,7 @@ export function useSiteSettings() {
         const r: any = await $fetch('/api/public/settings').catch(() => null)
         if (r?.success && r.data) {
           settings.value = normalize(r.data)
+          try { localStorage.setItem(CACHE_KEY, JSON.stringify(settings.value)) } catch {}
         }
         lastLoadAt = Date.now()
       } catch {
@@ -81,9 +83,13 @@ export function useSiteSettings() {
     return loadingPromise
   }
 
-  // auto-load HANYA di client — SSR fetch internal ke Express
-  // bikin crash "Cannot set properties of undefined" di dev
-  if (import.meta.client && lastLoadAt === 0) load()
+  if (import.meta.client) {
+    try {
+      const cached = localStorage.getItem(CACHE_KEY)
+      if (cached) settings.value = normalize(JSON.parse(cached))
+    } catch {}
+    if (lastLoadAt === 0) load()
+  }
 
   const siteName = computed(() => settings.value.site_name)
   const siteTitle = computed(() => settings.value.site_title)
@@ -104,24 +110,9 @@ export function useSiteSettings() {
   const maintenance = computed(() => settings.value.maintenance_mode === 'true')
 
   return {
-    settings,
-    load,
-    siteName,
-    siteTitle,
-    siteDescription,
-    siteKeywords,
-    logoUrl,
-    faviconUrl,
-    heroTitle,
-    heroLead,
-    marqueeText,
-    marqueeItems,
-    footerText,
-    footerCopyright,
-    wdMin,
-    wdFeePercent,
-    wdFeeFlat,
-    feeTransactionPercent,
-    maintenance,
+    settings, load, siteName, siteTitle, siteDescription, siteKeywords,
+    logoUrl, faviconUrl, heroTitle, heroLead, marqueeText, marqueeItems,
+    footerText, footerCopyright, wdMin, wdFeePercent, wdFeeFlat,
+    feeTransactionPercent, maintenance,
   }
 }
