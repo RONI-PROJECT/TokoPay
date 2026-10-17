@@ -1,22 +1,5 @@
 <template>
   <div class="docs-page">
-    <header class="nav">
-      <div class="nav-inner">
-        <NuxtLink to="/" class="brand">
-          <SiteLogo />
-        </NuxtLink>
-        <nav class="nav-links">
-          <NuxtLink to="/docs" class="active">Dokumentasi</NuxtLink>
-          <NuxtLink to="/tos">Syarat</NuxtLink>
-          <NuxtLink to="/privacy">Privasi</NuxtLink>
-        </nav>
-        <div class="nav-actions">
-          <NuxtLink to="/login" class="btn-ghost">Masuk</NuxtLink>
-          <NuxtLink to="/register" class="btn-solid">Daftar</NuxtLink>
-        </div>
-      </div>
-    </header>
-
     <section class="hero">
       <div class="hero-inner">
         <p class="eyebrow">DOKUMENTASI MERCHANT</p>
@@ -235,6 +218,7 @@
 </template>
 
 <script setup lang="ts">
+definePageMeta({ layout: 'dashboard' })
 const BASE = 'https://tokopayvip.vercel.app'
 const EP_CREATE = '/api/v1/qris/create'
 
