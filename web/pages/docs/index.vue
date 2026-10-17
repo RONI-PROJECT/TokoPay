@@ -559,8 +559,7 @@ const curlCreate = computed(() => `curl -X POST ${apiBase.value}${EP_CREATE} \\
     "callback_url": "https://webstore-kamu.com/webhook/tokopay",
     "expires_minutes": 15,
     "metadata": {
-      "order_id": "TPV-2043",
-      "product": "Sepatu Sneakers Putih"
+      "order_id": "TPV-2043"
     }
   }'`)
 
@@ -821,9 +820,9 @@ async function createQris(amount, reference, metadata) {
     method: 'POST',
     headers: {
       'Authorization': 'Bearer ' + API_KEY,
-      'Content-Type': 'application/json',
+      'Content-Type': 'application/json'
     },
-    body: JSON.stringify({ amount, reference, metadata, expires_minutes: 15 }),
+    body: JSON.stringify({ amount, reference, metadata, expires_minutes: 15 })
   })
   const j = await r.json()
   if (!j.success) throw new Error(j.message)
